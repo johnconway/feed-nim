@@ -1,5 +1,5 @@
 # Feed-Nim
-A feed parsing module for Nim, which parses RSS, Atom, and JSONfeed syndication formats. This has been substantially re-written and expanded from [Nim-RSS](https://github.com/achesak/nim-rss)
+A feed parsing module for [Nim](https://nim-lang.org), which parses RSS, Atom, and JSONfeed syndication formats. This has been substantially re-written and expanded from [Nim-RSS](https://github.com/achesak/nim-rss)
 
 It has not been tested, has no tests, and is mostly wriiten by an inexperienced dope who barely understands Nim. Use at your own risk.
 
