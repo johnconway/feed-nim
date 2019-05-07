@@ -1,3 +1,4 @@
+![Logo](logo.svg)
 # Feed-Nim
 A feed parsing module for [Nim](https://nim-lang.org), which parses RSS, Atom, and JSONfeed syndication formats. This has been substantially re-written and expanded from [Nim-RSS](https://github.com/achesak/nim-rss)
 
