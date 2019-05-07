@@ -5,12 +5,12 @@ A feed parsing module for Nim, which reads RSS, Atom, and JSONfeed syndication f
 
 <code>loadAtom(filename: string): Atom</code> Loads the Atom from the given _filename_
 
-<code>getAtom(url: string):</code> Gets the Atom over from the specified _url_
+<code>getAtom(url: string):</code> Gets the Atom from the specified _url_
 
 <code>loadRSS(filename: string): RSS</code> Loads the RSS from the given _filename_
 
-<code>getRSS(url: string):</code> Gets the RSS over from the specified _url_
+<code>getRSS(url: string):</code> Gets the RSS from the specified _url_
 
 <code>loadJsonFeed(filename: string):JSONfeed</code> Loads the JSONFeed from the given _filename_
 
-<code>getJsonFeed(url: string): </pre>JsonFeed = JSONFeed over from the specified _url_
+<code>getJsonFeed(url: string): </pre>JsonFeed = JSONFeed from the specified _url_
