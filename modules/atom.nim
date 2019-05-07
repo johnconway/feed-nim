@@ -13,22 +13,22 @@ import sugar
 
 type
     Atom* = object
-        author: AtomAuthor          #Sugar, not in Atom spec. Returns the first author.
-        authors*: seq[AtomAuthor]   #Pleuralised because the Atom spec allows more than one
+        author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
+        id*: string                 # Required Atom field
+        title*: string              # Required Atom field
+        updated*: string            # Required Atom field
+        authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
         category*: seq[string]
         generator*: string
         icon*: string
-        id*: string
         link*: AtomLink
         logo*: string
         rights*: string
         subtitle*: string
-        title*: string
-        updated*: string
         entrys*: seq[AtomEntry]
 
     AtomAuthor* = object
-        name*: string
+        name*: string               # Required Atom field
         url*: string
         email*: string
 
@@ -49,31 +49,37 @@ type
         length*: string
 
     AtomEntry* = object
-        author: AtomAuthor         #Sugar, not in Atom spec. Returns the first author.
-        authors*: seq[AtomAuthor]  #Pleuralised because the Atom spec allows more than one
+        id*: string                 # Required Atom field
+        title*: string              # Required Atom field
+        updated*: string            # Required Atom field
+        author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
+        authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
         category*: seq[string]
         content*: string
         contentSrc*: string
         contentType*: string
-        id*: string
         link*: AtomLink
         published*: string
         rights*: string
         source*: string
         summary*: string
-        title*: string
-        updated*: string
 
 
 proc parseEntry( node: XmlNode) : AtomEntry =
     var entry: AtomEntry = AtomEntry()
 
+    # Fill the required fields
+    entry.id = node.child("id").innerText
+    entry.title = node.child("title").innerText
+    entry.updated = node.child("updated").innerText
+
+    # Fill the optinal fields
     if node.child("author") != nil:
-        for con_node in node.findAll("author"):
+        for athr_node in node.findAll("author"):
             var author: AtomAuthor = AtomAuthor()
-            if con_node.child("name") != nil: author.name = con_node.child("name").innerText
-            if con_node.child("url") != nil: author.url = con_node.child("url").innerText
-            if con_node.child("email") != nil: author.email = con_node.child("email").innerText
+            author.name = athr_node.child("name").innerText
+            if athr_node.child("url") != nil: author.url = athr_node.child("url").innerText
+            if athr_node.child("email") != nil: author.email = athr_node.child("email").innerText
             entry.authors.add(author)
 
     if node.child("category") != nil:
@@ -93,8 +99,6 @@ proc parseEntry( node: XmlNode) : AtomEntry =
             if con_node.child("email") != nil: author.email = con_node.child("email").innerText
             entry.authors.add(author)
 
-    if node.child("id") != nil: entry.id = node.child("id").innerText
-
     if node.child("link") != nil:
         if node.attrs != nil:
             if node.attr("href") != "": entry.link.href = node.attr("href")
@@ -110,12 +114,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
 
     if node.child("summary") != nil: entry.summary = node.child("summary").innerText
 
-    if node.child("title") != nil: entry.title = node.child("title").innerText
-
-    if node.child("updated") != nil: entry.updated = node.child("updated").innerText
-
-    # SUGAR
-
+    # SUGAR an easy way to access an author
     if entry.authors.len() > 0:
         entry.author = entry.authors[0]
     else:
@@ -132,12 +131,18 @@ proc parseAtom*(data: string): Atom =
     # Create the return object.
     var atom: Atom = Atom()
 
+    # Fill in the required fields
+    atom.id = node.child("id").innerText
+    atom.title = node.child("title").innerText
+    atom.updated = node.child("updated").innerText
+
+    # Fill in the optional fields
     if node.child("author") != nil:
-        for con_node in node.findAll("author"):
+        for athr_node in node.findAll("author"):
             var author: AtomAuthor = AtomAuthor()
-            if con_node.child("name") != nil: author.name = con_node.child("name").innerText
-            if con_node.child("url") != nil: author.url = con_node.child("url").innerText
-            if con_node.child("email") != nil: author.email = con_node.child("email").innerText
+            author.name = athr_node.child("name").innerText
+            if athr_node.child("url") != nil: author.url = athr_node.child("url").innerText
+            if athr_node.child("email") != nil: author.email = athr_node.child("email").innerText
             atom.authors.add(author)
 
     if node.child("category") != nil:
@@ -146,8 +151,6 @@ proc parseAtom*(data: string): Atom =
     if node.child("generator") != nil: atom.generator = node.child("generator").innerText
 
     if node.child("icon") != nil: atom.icon = node.child("icon").innerText
-
-    if node.child("id") != nil: atom.id = node.child("id").innerText
 
     if node.child("link") != nil:
         if node.attrs != nil:
@@ -162,11 +165,7 @@ proc parseAtom*(data: string): Atom =
 
     if node.child("rights") != nil: atom.rights = node.child("rights").innerText
 
-    if node.child("title") != nil: atom.title = node.child("title").innerText
-
     if node.child("subtitle") != nil: atom.subtitle = node.child("subtitle").innerText
-
-    if node.child("updated") != nil: atom.updated = node.child("updated").innerText
 
     if atom.authors.len() > 0:
         atom.author = atom.authors[0]
