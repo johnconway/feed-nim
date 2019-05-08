@@ -19,6 +19,7 @@ type
         updated*: string            # Required Atom field
         authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
         category*: seq[string]
+        contributors*: seq[AtomAuthor]
         generator*: string
         icon*: string
         link*: AtomLink
@@ -31,6 +32,7 @@ type
         name*: string               # Required Atom field
         url*: string
         email*: string
+
     AtomLink* = object
         href*: string
         rel*: string
@@ -49,13 +51,51 @@ type
         content*: string
         contentSrc*: string
         contentType*: string
+        contributors*: seq[AtomAuthor]
         link*: AtomLink
         published*: string
         rights*: string
-        source*: string
+        source*: AtomSource
         summary*: string
 
+    AtomSource* = object
+        author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
+        authors: seq[AtomAuthor]
+        category*: seq[string]
+        contributors*: seq[AtomAuthor]
+        generator*: string
+        icon*: string
+        id*: string
+        link*: AtomLink
+        logo*: string
+        rights*: string
+        subtitle*: string
+        title*: string
+        updated*: string
 
+proc parseAuthors ( node: XmlNode, mode="author") : seq[AtomAuthor] =
+    var authors:seq[AtomAuthor]
+    if node.child(mode) != nil:
+        for athr_node in node.findAll(mode):
+            var author: AtomAuthor = AtomAuthor()
+            author.name = athr_node.child("name").innerText
+            if athr_node.child("url") != nil: author.url = athr_node.child("url").innerText
+            if athr_node.child("email") != nil: author.email = athr_node.child("email").innerText
+            authors.add(author)
+
+    return authors
+
+proc parseLink ( node: XmlNode ): AtomLink =
+    var link: AtomLink = AtomLink()
+    if node.attrs != nil:
+        if node.attr("href") != "": link.href = node.attr("href")
+        if node.attr("rel") != "": link.rel = node.attr("rel")
+        if node.attr("type") != "": link.linktype = node.attr("type")
+        if node.attr("hreflang") != "": link.rel = node.attr("hreflang")
+        if node.attr("title") != "": link.rel = node.attr("title")
+        if node.attr("length") != "": link.rel = node.attr("length")
+
+    return link
 
 proc parseEntry( node: XmlNode) : AtomEntry =
     var entry: AtomEntry = AtomEntry()
@@ -66,13 +106,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
     entry.updated = node.child("updated").innerText
 
     # Fill the optinal fields
-    if node.child("author") != nil:
-        for athr_node in node.findAll("author"):
-            var author: AtomAuthor = AtomAuthor()
-            author.name = athr_node.child("name").innerText
-            if athr_node.child("url") != nil: author.url = athr_node.child("url").innerText
-            if athr_node.child("email") != nil: author.email = athr_node.child("email").innerText
-            entry.authors.add(author)
+    entry.authors = parseAuthors(node)
 
     if node.child("category") != nil:
         entry.category = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
@@ -83,26 +117,29 @@ proc parseEntry( node: XmlNode) : AtomEntry =
             if node.attr("type") != "": entry.contentType = node.attr("type")
             if node.attr("src") != "": entry.contentSrc = node.attr("src")
 
-    if node.child("contributer") != nil:
-        for con_node in node.findAll("author"):
-            var author: AtomAuthor = AtomAuthor()
-            if con_node.child("name") != nil: author.name = con_node.child("name").innerText
-            if con_node.child("url") != nil: author.url = con_node.child("url").innerText
-            if con_node.child("email") != nil: author.email = con_node.child("email").innerText
-            entry.authors.add(author)
+    if node.child("contributor") != nil:
+        entry.contributors = parseAuthors(node, mode="contributor")
 
-    if node.child("link") != nil:
-        if node.attrs != nil:
-            if node.attr("href") != "": entry.link.href = node.attr("href")
-            if node.attr("rel") != "": entry.link.rel = node.attr("rel")
-            if node.attr("type") != "": entry.link.linktype = node.attr("type")
-            if node.attr("hreflang") != "": entry.link.rel = node.attr("hreflang")
-            if node.attr("title") != "": entry.link.rel = node.attr("title")
-            if node.attr("length") != "": entry.link.rel = node.attr("length")
+    if node.child("link") != nil: entry.link = node.child("link").parseLink()
+
 
     if node.child("published") != nil: entry.published = node.child("published").innerText
 
     if node.child("rights") != nil: entry.rights = node.child("rights").innerText
+
+    if node.child("source") != nil:
+        let source = node.child("source")
+        if node.child("category") != nil: entry.source.category = map(source.findAll("category"), (x: XmlNode) -> string => x.innerText)
+        if node.child("contributor") != nil: entry.source.contributors = parseAuthors(source, mode="contributor")
+        if source.child("generator") != nil: entry.source.generator = source.child("generator").innerText
+        if source.child("icon") != nil: entry.source.generator = source.child("icon").innerText
+        if source.child("id") != nil: entry.source.id = source.child("id").innerText
+        if source.child("link") != nil: entry.source.link = parseLink( source )
+        if source.child("logo") != nil: entry.source.logo = source.child("logo").innerText
+        if source.child("rights") != nil: entry.source.rights = source.child("rights").innerText
+        if source.child("subtitle") != nil: entry.source.subtitle = source.child("subtitle").innerText
+        if source.child("title") != nil: entry.source.title = source.child("title").innerText
+        if source.child("updated") != nil: entry.source.updated = source.child("updated").innerText
 
     if node.child("summary") != nil: entry.summary = node.child("summary").innerText
 
@@ -129,29 +166,18 @@ proc parseAtom*(data: string): Atom =
     atom.updated = node.child("updated").innerText
 
     # Fill in the optional fields
-    if node.child("author") != nil:
-        for athr_node in node.findAll("author"):
-            var author: AtomAuthor = AtomAuthor()
-            author.name = athr_node.child("name").innerText
-            if athr_node.child("url") != nil: author.url = athr_node.child("url").innerText
-            if athr_node.child("email") != nil: author.email = athr_node.child("email").innerText
-            atom.authors.add(author)
+    if node.child("author") != nil: atom.authors = node.parseAuthors()
 
     if node.child("category") != nil:
         atom.category = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
+
+    if node.child("contributor") != nil: atom.contributors = node.parseAuthors(mode="contributor")
 
     if node.child("generator") != nil: atom.generator = node.child("generator").innerText
 
     if node.child("icon") != nil: atom.icon = node.child("icon").innerText
 
-    if node.child("link") != nil:
-        if node.attrs != nil:
-            if node.attr("href") != "": atom.link.href = node.attr("href")
-            if node.attr("rel") != "": atom.link.rel = node.attr("rel")
-            if node.attr("type") != "": atom.link.linktype = node.attr("type")
-            if node.attr("hreflang") != "": atom.link.rel = node.attr("hreflang")
-            if node.attr("title") != "": atom.link.rel = node.attr("title")
-            if node.attr("length") != "": atom.link.rel = node.attr("length")
+    if node.child("link") != nil: atom.link = node.child("link").parseLink()
 
     if node.child("logo") != nil: atom.logo = node.child("logo").innerText
 
