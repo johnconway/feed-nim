@@ -5,12 +5,12 @@
     <updated>2003-12-13T18:30:02Z</updated>
     <author>
         <name>Joe Bloggs</name>
-        <url>http://joe.bloggs</url>
+        <uri>http://joe.bloggs</uri>
         <email>mail@joe.bloggs</email>
     </author>
-    <author>
+    <contributor>
         <name>Jane Bloggs</name>
-    </author>
+    </contributor>
     <category>Planes</category>
     <category>Trains</category>
     <category>Automobiles</category>
@@ -71,12 +71,10 @@
 
     <entry>
         <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
-        <title>Aeroplanes not Airplanes</title>
+        <title>Trains Are Good</title>
         <updated>2003-12-13T18:30:02Z</updated>
         <author>
-            <name>Joe Bloggs</name>
-            <url>http://joe.bloggs</url>
-            <email>mail@joe.bloggs</email>
+            <name>Jane Bloggs</name>
         </author>
         <category>trains</category>
         <content src="http://trains.com"></content>

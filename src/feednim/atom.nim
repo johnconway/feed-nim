@@ -30,7 +30,7 @@ type
 
     AtomAuthor* = object
         name*: string               # Required Atom field
-        url*: string
+        uri*: string
         email*: string
 
     AtomLink* = object
@@ -79,7 +79,7 @@ proc parseAuthors ( node: XmlNode, mode="author") : seq[AtomAuthor] =
         for athr_node in node.findAll(mode):
             var author: AtomAuthor = AtomAuthor()
             author.name = athr_node.child("name").innerText
-            if athr_node.child("url") != nil: author.url = athr_node.child("url").innerText
+            if athr_node.child("uri") != nil: author.uri = athr_node.child("uri").innerText
             if athr_node.child("email") != nil: author.email = athr_node.child("email").innerText
             authors.add(author)
 
