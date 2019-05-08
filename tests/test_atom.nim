@@ -5,12 +5,19 @@
 #
 # To run these tests, simply execute `nimble test`.
 
-
-
-
-
 import unittest
 
-import FeedNim
-test "can add":
-  check add(5, 5) == 10
+import marshal
+
+import feednim
+
+test "Read Valid Atom Feed":
+    let feed = "./tests/test_atom.xml".loadAtom()
+
+    echo $$feed
+
+    check feed.title != ""
+    check feed.generator != ""
+    check feed.authors[0].name == "Joe Bloggs"
+    check feed.authors[0].uri == "http://joe.bloggs"
+    check feed.authors[0].email == "mail@joe.bloggs"

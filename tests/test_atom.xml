@@ -3,30 +3,37 @@
     <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
     <title>Bloggs's Planes Trains and Automobiles</title>
     <updated>2003-12-13T18:30:02Z</updated>
+
     <author>
         <name>Joe Bloggs</name>
         <uri>http://joe.bloggs</uri>
         <email>mail@joe.bloggs</email>
     </author>
+
     <contributor>
         <name>Jane Bloggs</name>
     </contributor>
-    <category>Planes</category>
-    <category>Trains</category>
-    <category>Automobiles</category>
-    <generator>nim<generator>
+
+    <category term="planes" label="Planes" scheme="http://awesomecategories.org"/>
+    <category term="trains" label="Trains" />
+    <category term="automobiles" label="Automobiles" />
+
+    <generator uri="https://github.com/dom96/jester">Jester</generator>
+
     <icon>http://joe.bloggs/mug,jpg</icon>
+
     <link
-        href="http://joe.bloggs/american"
-        rel="alternate"
-        type="application/xml+rss"
-        hreflang="en-US"
-        title="Ye-ha"
+        href="http://joe.bloggs/atom"
+        rel="self"
+        type="application/xml+atom"
+        hreflang="en-GB"
+        title="Bloggs's Planes Trains and Automobiles"
         length="1000000"
     />
-    <logo>&copy; Joe and Jane Bloggs</logo>
-    <rights>&copy; Joe and Jane Bloggs</rights>
-    <subtitle></subtitle>
+
+    <logo>http://joe.bloggs/logo.jpeg</logo>
+    <rights>Copyright Joe and Jane Bloggs</rights>
+    <subtitle>About Trains, Planes, and Autonmobiles.</subtitle>
 
     <entry>
         <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
@@ -34,38 +41,29 @@
         <updated>2003-12-13T18:30:02Z</updated>
         <author>
             <name>Joe Bloggs</name>
-            <url>http://joe.bloggs</url>
+            <uri>http://joe.bloggs</uri>
             <email>mail@joe.bloggs</email>
         </author>
-        <category>planes</category>
-        <content type="html">
-            <b>Aero</b>- not air-, fools!
+        <category term="words" label="Words" scheme="http://awesomecategories.org" />
+        <content type="xhtml">
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <p><i>Aero</i>- not air-, fools!</p>
+            </div>
         </content>
-        <link
-            href="http://planes.com"
-            rel="reply"
-            type="html"
-            hreflang="en-US"
-            title="Airplanes not Aeroplanes"
-            length="1000000"
-        />
         <published>2003-12-13T18:30:02Z</published>
-        <rights>&copy; Joe Bloggs</rights>
+        <rights>Copyright Joe Bloggs</rights>
         <source>
-            <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+            <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6d</id>
             <title>Aeroplane</title>
             <subtitle>Aeroplanes</subtitle>
             <updated>1755-04-15T18:30:00Z</updated>
             <author>
                 <name>Samuel Johnson</name>
-                <url>http://dictionary.com</url>
+                <uri>http://dictionary.com</uri>
                 <email>sjohnson@dictionary.com</email>
             </author>
-            <category>words</category>
-            <rights>&copy; Samual Johnson</rights>
-
-
-
+            <category term="planes" label="Planes" scheme="http://awesomecategories.org" />
+            <rights>Copyright Samual Johnson</rights>
         </source>
     </entry>
 
@@ -76,10 +74,18 @@
         <author>
             <name>Jane Bloggs</name>
         </author>
-        <category>trains</category>
+        <category term="trains" label="Trains" />
         <content src="http://trains.com"></content>
+        <link
+            href="http://joe.bloggs/trains-full"
+            rel="alternate"
+            type="text/html"
+            hreflang="en-GB"
+            title="Trains!"
+            length="1000000"
+        />
         <published>2003-12-13T18:20:02Z</published>
-        <rights>&copy; Jane Bloggs</rights>
+        <rights>Copyright Jane Bloggs</rights>
         <summary>
             Trains!
         </summary>
