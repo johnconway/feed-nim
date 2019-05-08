@@ -18,7 +18,7 @@ type
         title*: string              # Required Atom field
         updated*: string            # Required Atom field
         authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
-        category*: seq[string]
+        categories*: seq[string]
         contributors*: seq[AtomAuthor]
         generator*: string
         icon*: string
@@ -47,7 +47,7 @@ type
         updated*: string            # Required Atom field
         author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
         authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
-        category*: seq[string]
+        categories*: seq[string]
         content*: string
         contentSrc*: string
         contentType*: string
@@ -61,7 +61,7 @@ type
     AtomSource* = object
         author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
         authors: seq[AtomAuthor]
-        category*: seq[string]
+        categories*: seq[string]
         contributors*: seq[AtomAuthor]
         generator*: string
         icon*: string
@@ -109,7 +109,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
     entry.authors = node.parseAuthors()
 
     if node.child("category") != nil:
-        entry.category = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
+        entry.categories = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
 
     if node.child("content") != nil:
         entry.content = node.child("content").innerText
@@ -129,7 +129,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
     if node.child("source") != nil:
         let source = node.child("source")
         if node.child("author") != nil: entry.source.authors = source.parseAuthors()
-        if node.child("category") != nil: entry.source.category = map(source.findAll("category"), (x: XmlNode) -> string => x.innerText)
+        if node.child("category") != nil: entry.source.categories = map(source.findAll("category"), (x: XmlNode) -> string => x.innerText)
         if node.child("contributor") != nil: entry.source.contributors = source.parseAuthors(mode="contributor")
         if source.child("generator") != nil: entry.source.generator = source.child("generator").innerText
         if source.child("icon") != nil: entry.source.generator = source.child("icon").innerText
@@ -169,7 +169,7 @@ proc parseAtom*(data: string): Atom =
     if node.child("author") != nil: atom.authors = node.parseAuthors()
 
     if node.child("category") != nil:
-        atom.category = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
+        atom.categories = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
 
     if node.child("contributor") != nil: atom.contributors = node.parseAuthors(mode="contributor")
 
