@@ -11,8 +11,6 @@ import xmltree
 import streams
 import sugar
 
-import marshal
-
 type
     Atom* = object
         author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
