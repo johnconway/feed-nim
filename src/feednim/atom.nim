@@ -106,7 +106,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
     entry.updated = node.child("updated").innerText
 
     # Fill the optinal fields
-    entry.authors = parseAuthors(node)
+    entry.authors = node.parseAuthors()
 
     if node.child("category") != nil:
         entry.category = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
@@ -118,10 +118,9 @@ proc parseEntry( node: XmlNode) : AtomEntry =
             if node.attr("src") != "": entry.contentSrc = node.attr("src")
 
     if node.child("contributor") != nil:
-        entry.contributors = parseAuthors(node, mode="contributor")
+        entry.contributors = node.parseAuthors(mode="contributor")
 
     if node.child("link") != nil: entry.link = node.child("link").parseLink()
-
 
     if node.child("published") != nil: entry.published = node.child("published").innerText
 
@@ -129,8 +128,9 @@ proc parseEntry( node: XmlNode) : AtomEntry =
 
     if node.child("source") != nil:
         let source = node.child("source")
+        if node.child("author") != nil: entry.source.authors = source.parseAuthors()
         if node.child("category") != nil: entry.source.category = map(source.findAll("category"), (x: XmlNode) -> string => x.innerText)
-        if node.child("contributor") != nil: entry.source.contributors = parseAuthors(source, mode="contributor")
+        if node.child("contributor") != nil: entry.source.contributors = source.parseAuthors(mode="contributor")
         if source.child("generator") != nil: entry.source.generator = source.child("generator").innerText
         if source.child("icon") != nil: entry.source.generator = source.child("icon").innerText
         if source.child("id") != nil: entry.source.id = source.child("id").innerText
