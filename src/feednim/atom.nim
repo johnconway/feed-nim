@@ -31,15 +31,6 @@ type
         name*: string               # Required Atom field
         url*: string
         email*: string
-
-    AtomImage* = object
-        url*: string
-        title*: string
-        link*: string
-        width*: string
-        height*: string
-        description*: string
-
     AtomLink* = object
         href*: string
         rel*: string
@@ -63,6 +54,7 @@ type
         rights*: string
         source*: string
         summary*: string
+
 
 
 proc parseEntry( node: XmlNode) : AtomEntry =

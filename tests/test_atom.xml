@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+    <title>Bloggs's Planes Trains and Automobiles</title>
+    <updated>2003-12-13T18:30:02Z</updated>
+    <author>
+        <name>Joe Bloggs</name>
+        <url>http://joe.bloggs</url>
+        <email>mail@joe.bloggs</email>
+    </author>
+    <author>
+        <name>Jane Bloggs</name>
+    </author>
+    <category>Planes</category>
+    <category>Trains</category>
+    <category>Automobiles</category>
+    <generator>nim<generator>
+    <icon>http://joe.bloggs/mug,jpg</icon>
+    <link
+        href="http://joe.bloggs/american"
+        rel="alternate"
+        type="application/xml+rss"
+        hreflang="en-US"
+        title="Ye-ha"
+        length="1000000"
+    />
+    <logo>&copy; Joe and Jane Bloggs</logo>
+    <rights>&copy; Joe and Jane Bloggs</rights>
+    <subtitle></subtitle>
+
+    <entry>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+        <title>Aeroplanes not Airplanes</title>
+        <updated>2003-12-13T18:30:02Z</updated>
+        <author>
+            <name>Joe Bloggs</name>
+            <url>http://joe.bloggs</url>
+            <email>mail@joe.bloggs</email>
+        </author>
+        <category>planes</category>
+        <content type="html">
+            <b>Aero</b>- not air-, fools!
+        </content>
+        <link
+            href="http://planes.com"
+            rel="reply"
+            type="html"
+            hreflang="en-US"
+            title="Airplanes not Aeroplanes"
+            length="1000000"
+        />
+        <published>2003-12-13T18:30:02Z</published>
+        <rights>&copy; Joe Bloggs</rights>
+        <source>
+            <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+            <title>Aeroplane</title>
+            <subtitle>Aeroplanes</subtitle>
+            <updated>1755-04-15T18:30:00Z</updated>
+            <author>
+                <name>Samuel Johnson</name>
+                <url>http://dictionary.com</url>
+                <email>sjohnson@dictionary.com</email>
+            </author>
+            <category>words</category>
+            <rights>&copy; Samual Johnson</rights>
+
+
+
+        </source>
+    </entry>
+
+    <entry>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+        <title>Aeroplanes not Airplanes</title>
+        <updated>2003-12-13T18:30:02Z</updated>
+        <author>
+            <name>Joe Bloggs</name>
+            <url>http://joe.bloggs</url>
+            <email>mail@joe.bloggs</email>
+        </author>
+        <category>trains</category>
+        <content src="http://trains.com"></content>
+        <published>2003-12-13T18:20:02Z</published>
+        <rights>&copy; Jane Bloggs</rights>
+        <summary>
+            Trains!
+        </summary>
+    </entry>
+</feed>
