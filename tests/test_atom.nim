@@ -10,6 +10,7 @@ import unittest
 import marshal
 
 import feednim
+import ../src/feednim/atom
 
 test "Read Valid Atom Feed":
     let feed = "./tests/test_atom.xml".loadAtom()
@@ -60,8 +61,10 @@ test "Read Valid Atom Feed":
     check feed.entries[0].categories[0].label == "Words"
     check feed.entries[0].categories[0].scheme == "http://awesomecategories.org"
 
-    #check feed.entries[0].content.contenttype == "xhtml"
-    check feed.entries[0].content == """<div xmlns="http://www.w3.org/1999/xhtml"><p><i>Aero</i>- not air-, fools!</p></div>"""
+    var feed_0_content_textType = feed.entries[0].content.textType
+    check feed_0_content_textType == "xhtml"
+    var feed_0_content_text: string = feed.entries[0].content
+    check feed_0_content_text == """<div xmlns="http://www.w3.org/1999/xhtml"><p><i>Aero</i>- not air-, fools!</p></div>"""
 
     check feed.entries[0].published == "2003-12-13T18:30:02Z"
     check feed.entries[0].rights == "Copyright Joe Bloggs"
@@ -86,7 +89,7 @@ test "Read Valid Atom Feed":
 
     check feed.entries[1].categories[0].term == "trains"
     check feed.entries[1].categories[0].label == "Trains"
-    check feed.entries[1].contentSrc == "http://trains.com"
+    check feed.entries[1].content.src == "http://trains.com"
     check feed.entries[1].link.href == "http://joe.bloggs/trains-full"
     check feed.entries[1].link.rel == "alternate"
     check feed.entries[1].link.linktype == "text/html"

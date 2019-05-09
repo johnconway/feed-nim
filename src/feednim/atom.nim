@@ -11,12 +11,15 @@ import xmltree
 import streams
 import sugar
 
-
 type
-    Atom* = object
-        author*: AtomAuthor             # Sugar, not in Atom spec. Returns the first author.
+    AtomCommon = ref object of RootObj
+        xmlbase*: string
+        xmllang*: string
+
+    Atom* = ref object of AtomCommon
+        author*: AtomAuthor             # Sugar, not in Atom spec. Refers to the first author.
         id*: string                     # Required Atom field
-        title*: string                  # Required Atom field
+        title*: AtomText                # Required Atom field
         updated*: string                # Required Atom field
         authors*: seq[AtomAuthor]       # Pleuralised because the Atom spec allows more than one
         categories*: seq[AtomCategory]
@@ -26,8 +29,12 @@ type
         link*: AtomLink
         logo*: string
         rights*: string
-        subtitle*: string
+        subtitle*: AtomText
         entries*: seq[AtomEntry]
+
+    AtomText* = ref object of AtomCommon
+        textType*: string
+        text*: string
 
     AtomAuthor* = object
         name*: string                    # Required Atom field
@@ -39,6 +46,9 @@ type
         label*: string
         scheme*: string
 
+    AtomContent* = ref object of AtomText
+        src*: string
+
     AtomLink* = object
         href*: string
         rel*: string
@@ -47,16 +57,14 @@ type
         title*: string
         length*: string
 
-    AtomEntry* = object
+    AtomEntry* = ref object of AtomCommon
         id*: string                     # Required Atom field
-        title*: string                  # Required Atom field
+        title*: AtomText                # Required Atom field
         updated*: string                # Required Atom field
         author*: AtomAuthor             # Sugar, not in Atom spec. Returns the first author.
         authors*: seq[AtomAuthor]       # Pleuralised because the Atom spec allows more than one
         categories*: seq[AtomCategory]
-        content*: string
-        contentSrc*: string
-        contentType*: string
+        content*: AtomContent
         contributors*: seq[AtomAuthor]
         link*: AtomLink
         published*: string
@@ -64,7 +72,7 @@ type
         source*: AtomSource
         summary*: string
 
-    AtomSource* = object
+    AtomSource* = ref object of AtomCommon
         author*: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
         authors*: seq[AtomAuthor]
         categories*: seq[AtomCategory]
@@ -79,7 +87,10 @@ type
         title*: string
         updated*: string
 
-proc parseAuthors ( node: XmlNode, mode="author") : seq[AtomAuthor] =
+converter toString*(obj: AtomText): string =
+    return obj.text
+
+proc parseAuthors ( node: XmlNode, mode="author" ) : seq[AtomAuthor] =
     var authors:seq[AtomAuthor]
     if node.child(mode) != nil:
         for athr_node in node.findAll(mode):
@@ -116,12 +127,13 @@ proc parseLink ( node: XmlNode ): AtomLink =
         if node.attr("length") != "": link.length = node.attr("length")
     return link
 
-proc parseEntry( node: XmlNode) : AtomEntry =
+proc parseEntry( node: XmlNode ) : AtomEntry =
     var entry: AtomEntry = AtomEntry()
 
     # Fill the required fields
     entry.id = node.child("id").innerText
-    entry.title = node.child("title").innerText
+    entry.title = AtomText()
+    entry.title.text = node.child("title").innerText
     entry.updated = node.child("updated").innerText
 
     # Fill the optinal fields
@@ -131,19 +143,20 @@ proc parseEntry( node: XmlNode) : AtomEntry =
 
     if node.child("content") != nil:
         let content_node = node.child("content")
-        entry.content = content_node.innerText
+        entry.content = AtomContent()
+        entry.content.text = content_node.innerText
 
         if content_node.attrs != nil:
             if content_node.attr("type") == "xhtml" or content_node.attr("type") == "html":
                 var content = ""
-                entry.contentType = node.attr("type")
+                entry.content.texttype = content_node.attr("type")
                 for item in content_node.items:
                     content = content & $item
-                entry.content = content
+                entry.content.text = content
             else:
-                entry.content = content_node.innerText
+                entry.content.text = content_node.innerText
 
-            entry.contentSrc = content_node.attr("src")
+            entry.content.src = content_node.attr("src")
 
     if node.child("contributor") != nil:
         entry.contributors = node.parseAuthors(mode="contributor")
@@ -156,6 +169,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
 
     if node.child("source") != nil:
         let source = node.child("source")
+        entry.source = AtomSource()
         if source.child("author") != nil: entry.source.authors = source.parseAuthors()
         if source.child("category") != nil: entry.source.categories = source.parseCategories()
         if source.child("contributor") != nil: entry.source.contributors = source.parseAuthors(mode="contributor")
@@ -181,7 +195,7 @@ proc parseEntry( node: XmlNode) : AtomEntry =
 
     return entry
 
-proc parseAtom*(data: string): Atom =
+proc parseAtom* ( data: string ): Atom =
     ## Parses the Atom from the given string.
 
     # Parse into XML.
@@ -192,7 +206,9 @@ proc parseAtom*(data: string): Atom =
 
     # Fill in the required fields
     atom.id = node.child("id").innerText
-    atom.title = node.child("title").innerText
+
+    atom.title = AtomText()
+    atom.title.text = node.child("title").innerText
     atom.updated = node.child("updated").innerText
 
     # Fill in the optional fields
@@ -212,7 +228,9 @@ proc parseAtom*(data: string): Atom =
 
     if node.child("rights") != nil: atom.rights = node.child("rights").innerText
 
-    if node.child("subtitle") != nil: atom.subtitle = node.child("subtitle").innerText
+    if node.child("subtitle") != nil:
+        atom.subtitle = AtomText()
+        atom.subtitle.text = node.child("subtitle").innerText
 
     if atom.authors.len() > 0:
         atom.author = atom.authors[0]
