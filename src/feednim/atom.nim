@@ -87,7 +87,8 @@ type
         title*: string
         updated*: string
 
-converter toString*(obj: AtomText): string =
+
+converter toString*(obj: AtomText): string = # Promotes text node to the top if caller expects string
     return obj.text
 
 proc parseAuthors ( node: XmlNode, mode="author" ) : seq[AtomAuthor] =
