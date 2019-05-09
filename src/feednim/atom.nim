@@ -12,7 +12,7 @@ import streams
 import sugar
 
 type
-    AtomCommon = ref object of RootObj
+    AtomCommon = ref object of RootObj  # These properties aren't gathered yet
         xmlbase*: string
         xmllang*: string
 
@@ -92,7 +92,7 @@ type
 
 
 # Promotes text node to the top of an AtomText object if caller expects a string
-converter toString*(obj: AtomText): string =
+converter atomToString*(obj: AtomText): string =
     return obj.text
 
 
@@ -250,16 +250,13 @@ proc parseAtom* ( data: string ): Atom =
     else:
         atom.author = AtomAuthor()
 
-    # If there are no entries:
-    if node.child("entry") == nil:
+
+    if node.child("entry") == nil:    # If there are no entries:
         atom.entries = @[]
         return atom
 
-    # Otherwise, add the entries.
-    if node.child("entry") != nil:
+    if node.child("entry") != nil:    # Otherwise, add the entries.
         atom.entries = map( node.findAll("entry"), parseEntry )
 
     # Return the Atom data.
     return atom
-
-

@@ -24,17 +24,23 @@ type
         webMaster*: string
         pubDate*: string
         lastBuildDate*: string
-        category*: seq[string]
+        categories*: seq[RSSCategory]
         generator*: string
         docs*: string
         cloud*: RSSCloud
-        ttl*: string
+        ttl*: int
         image*: RSSImage
         rating*: string
         textInput*: RSSTextInput
-        skipHours*: seq[string]
+        skipHours*: seq[int]
         skipDays*: seq[string]
         items*: seq[RSSItem]
+
+    RSSText = ref object of RootObj
+        text*: string
+
+    RSSCategory = ref object of RSSText
+        domain*: string
 
     RSSEnclosure* = object
         url*: string
@@ -62,20 +68,36 @@ type
         name*: string
         link*: string
 
+    RSSSource* = ref object of RSSText
+        url*: string
+
     RSSItem* = object
         title*: string
         link*: string
         description*: string
         author*: string
-        category*: seq[string]
+        categories*: seq[RSSCategory]
         comments*: string
         enclosure*: RSSEnclosure
         guid*: string
         pubDate*: string
-        sourceUrl*: string
-        sourceText*: string
+        source*: RSSSource
 
-proc parseItem( node: XmlNode) : RSSItem =
+converter rssToString*(obj: RSSText): string =
+    return obj.text
+
+func parseCategories( node: XmlNode ): seq[RSSCategory] =
+    var categories:seq[RSSCategory]
+    for cat_node in node.findAll("category"):
+        var category: RSSCategory = RSSCategory()
+        if cat_node.attr("domain") != "": category.domain = cat_node.attr("domain")
+        category.text = cat_node.innerText
+        categories.add(category)
+    if categories.len == 0: return @[]
+    return categories
+
+
+func parseItem( node: XmlNode) : RSSItem =
     var item: RSSItem = RSSItem()
     if node.child("title") != nil: item.title = node.child("title").innerText
 
@@ -86,8 +108,7 @@ proc parseItem( node: XmlNode) : RSSItem =
     for key in @["author", "dc:creator"]:
         if node.child(key) != nil: item.author = node.child(key).innerText
 
-    if node.child("category") != nil:
-        item.category = map(node.findAll("category"), (x: XmlNode) -> string => x.innerText)
+    if node.child("category") != nil: item.categories = node.parseCategories()
 
     if node.child("comments") != nil: item.comments = node.child("comments").innerText
 
@@ -103,8 +124,9 @@ proc parseItem( node: XmlNode) : RSSItem =
     if node.child("pubDate") != nil: item.pubDate = node.child("pubDate").innerText
 
     if node.child("source") != nil:
-        item.sourceUrl = node.child("source").attr("url")
-        item.sourceText = node.child("source").innerText
+        item.source = RSSSource()
+        item.source.url = node.child("source").attr("url")
+        item.source.text = node.child("source").innerText
 
     return item
 
@@ -140,7 +162,7 @@ proc parseRSS*(data: string): RSS =
 
     if channel.child("lastBuildDate") != nil: rss.lastBuildDate  = channel.child("lastBuildDate").innerText
 
-    if channel.child("category") != nil: rss.category = map(channel.findAll("category"), (x: XmlNode) -> string => x.innerText)
+    if channel.child("category") != nil: rss.categories = channel.parseCategories()
 
     for key in @["generator", "dc:publisher"]:
         if channel.child(key) != nil: rss.generator = channel.child(key).innerText
@@ -156,7 +178,7 @@ proc parseRSS*(data: string): RSS =
         cloud.protocol = channel.child("cloud").attr("protocol")
         rss.cloud = cloud
 
-    if channel.child("ttl") != nil: rss.ttl = channel.child("ttl").innerText
+    if channel.child("ttl") != nil: rss.ttl = channel.child("ttl").innerText.parseInt()
 
     if channel.child("image") != nil:
         var image: RSSImage = RSSImage()
@@ -181,7 +203,7 @@ proc parseRSS*(data: string): RSS =
         rss.textInput = textInput
 
     if channel.child("skipHours") != nil:
-        rss.skipHours = map(channel.findAll("hour"), (x: XmlNode) -> string => x.innerText)
+        rss.skipHours = map(channel.findAll("hour"), (x: XmlNode) -> int => x.innerText.parseInt() )
     if channel.child("skipDays") != nil:
         rss.skipDays = map(channel.findAll("day"), (x: XmlNode) -> string => x.innerText)
 

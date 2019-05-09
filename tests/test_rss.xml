@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Bloggs's Planes Trains and Automobiles</title>
+
+		<link>http://joe.bloggs</link>
+
+		<description>About Trains, Planes, and Automobiles.</description>
+
+		<language>en-uk</language>
+		<copyright>Copyright Joe and Jane Bloggs</copyright>
+		<managingEditor>mail@joe.bloggs (Joe Bloggs)</managingEditor>
+		<webMaster>master@joe.bloggs (Joe Bloggs)</webMaster>
+		<pubDate>Sat, 07 Sep 2002 00:00:01 GMT</pubDate>
+		<lastBuildDate>Sat, 07 Sep 2002 00:00:01 GMT</lastBuildDate>
+
+		<category domain="http://awesomecategories.org">Planes</category>
+		<category>Trains</category>
+		<category>Automobiles</category>
+
+		<generator>Jester</generator>
+		<docs>http://blogs.law.harvard.edu/tech/rss</docs>
+
+		<cloud domain="rpc.sys.com" port="80" path="/RPC2" registerProcedure="pingMe" protocol="soap" />
+
+		<ttl>60</ttl>
+		<image>
+			<url>http://joe.bloggs/mug.jpg</url>
+			<title>Bloggs's Planes Trains and Automobiles</title>
+			<link>http://joe.bloggs</link>
+		</image>
+
+		<rating>AO</rating>
+
+		<skipHours><hour>0</hour><hour>1</hour><hour>2</hour><hour>3</hour><hour>4</hour></skipHours>
+		<skipDays><day>Saturday</day><day>Sunday</day></skipDays>
+
+		<textInput>
+			<title>Search</title>
+			<description>Search for Trains!</description>
+			<name>Search Term</name>
+			<link>http://joe.bloggs/search.cgi</link>
+		</textInput>
+
+		<item>
+			<title>Aeroplanes not Airplanes</title>
+			<link>http://joe.bloggs/posts/1</link>
+			<pubDate>Sat, 07 Sep 2002 00:00:01 GMT</pubDate>
+			<description>Aero- not air-, fools!</description>
+			<author>jane@joe.bloggs (Jane Bloggs)</author>
+			<category domain="http://awesomecategories.org" >Words</category>
+			<comments>http://joe.bloggs/posts/1/comments</comments>
+			<enclosure url="http://www.scripting.com/mp3s/weatherReportSuite.mp3" length="12216320" type="audio/mpeg" />
+			<guid>http://joe.bloggs/posts/1</guid>
+			<source url="http://dictionary.com">The Dictionary</source>
+		</item>
+
+	</channel>
+</rss>
