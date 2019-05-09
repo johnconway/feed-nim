@@ -33,7 +33,7 @@
 
     <logo>http://joe.bloggs/logo.jpeg</logo>
     <rights>Copyright Joe and Jane Bloggs</rights>
-    <subtitle>About Trains, Planes, and Autonmobiles.</subtitle>
+    <subtitle>About Trains, Planes, and Automobiles.</subtitle>
 
     <entry>
         <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
@@ -86,8 +86,6 @@
         />
         <published>2003-12-13T18:20:02Z</published>
         <rights>Copyright Jane Bloggs</rights>
-        <summary>
-            Trains!
-        </summary>
+        <summary>Trains!</summary>
     </entry>
 </feed>

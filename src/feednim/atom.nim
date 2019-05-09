@@ -11,13 +11,14 @@ import xmltree
 import streams
 import sugar
 
+
 type
     Atom* = object
-        author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
-        id*: string                 # Required Atom field
-        title*: string              # Required Atom field
-        updated*: string            # Required Atom field
-        authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
+        author*: AtomAuthor             # Sugar, not in Atom spec. Returns the first author.
+        id*: string                     # Required Atom field
+        title*: string                  # Required Atom field
+        updated*: string                # Required Atom field
+        authors*: seq[AtomAuthor]       # Pleuralised because the Atom spec allows more than one
         categories*: seq[AtomCategory]
         contributors*: seq[AtomAuthor]
         generator*: string
@@ -29,7 +30,7 @@ type
         entries*: seq[AtomEntry]
 
     AtomAuthor* = object
-        name*: string               # Required Atom field
+        name*: string                    # Required Atom field
         uri*: string
         email*: string
 
@@ -47,11 +48,11 @@ type
         length*: string
 
     AtomEntry* = object
-        id*: string                 # Required Atom field
-        title*: string              # Required Atom field
-        updated*: string            # Required Atom field
-        author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
-        authors*: seq[AtomAuthor]   # Pleuralised because the Atom spec allows more than one
+        id*: string                     # Required Atom field
+        title*: string                  # Required Atom field
+        updated*: string                # Required Atom field
+        author*: AtomAuthor             # Sugar, not in Atom spec. Returns the first author.
+        authors*: seq[AtomAuthor]       # Pleuralised because the Atom spec allows more than one
         categories*: seq[AtomCategory]
         content*: string
         contentSrc*: string
@@ -64,8 +65,8 @@ type
         summary*: string
 
     AtomSource* = object
-        author: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
-        authors: seq[AtomAuthor]
+        author*: AtomAuthor          # Sugar, not in Atom spec. Returns the first author.
+        authors*: seq[AtomAuthor]
         categories*: seq[AtomCategory]
         contributors*: seq[AtomAuthor]
         generator*: string
@@ -107,7 +108,7 @@ proc parseCategories ( node: XmlNode ) : seq[AtomCategory] =
 proc parseLink ( node: XmlNode ): AtomLink =
     var link: AtomLink = AtomLink()
     if node.attrs != nil:
-        if node.attr("href") != "": link.href = node.attr("rel")
+        if node.attr("href") != "": link.href = node.attr("href")
         if node.attr("rel") != "": link.rel = node.attr("rel")
         if node.attr("type") != "": link.linktype = node.attr("type")
         if node.attr("hreflang") != "": link.hreflang = node.attr("hreflang")
@@ -129,10 +130,20 @@ proc parseEntry( node: XmlNode) : AtomEntry =
     if node.child("category") != nil: entry.categories = node.parseCategories()
 
     if node.child("content") != nil:
-        entry.content = node.child("content").innerText
-        if node.attrs != nil:
-            if node.attr("type") != "": entry.contentType = node.attr("type")
-            if node.attr("src") != "": entry.contentSrc = node.attr("src")
+        let content_node = node.child("content")
+        entry.content = content_node.innerText
+
+        if content_node.attrs != nil:
+            if content_node.attr("type") == "xhtml" or content_node.attr("type") == "html":
+                var content = ""
+                entry.contentType = node.attr("type")
+                for item in content_node.items:
+                    content = content & $item
+                entry.content = content
+            else:
+                entry.content = content_node.innerText
+
+            entry.contentSrc = content_node.attr("src")
 
     if node.child("contributor") != nil:
         entry.contributors = node.parseAuthors(mode="contributor")
