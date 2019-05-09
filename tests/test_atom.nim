@@ -33,7 +33,9 @@ test "Read Valid Atom Feed":
     check feed.categories[2].term == "automobiles"
     check feed.categories[2].label == "Automobiles"
 
-    #check feed.generator.uri == "https://github.com/dom96/jester"
+    let feed_generator_uri = feed.generator.uri
+    check feed_generator_uri == "https://github.com/dom96/jester"
+    let feed_generator_text:string = feed.generator
     check feed.generator == "Jester"
 
     check feed.icon == "http://joe.bloggs/mug,jpg"

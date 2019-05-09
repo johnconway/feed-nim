@@ -24,7 +24,7 @@ type
         authors*: seq[AtomAuthor]       # Pleuralised because the Atom spec allows more than one
         categories*: seq[AtomCategory]
         contributors*: seq[AtomAuthor]
-        generator*: string
+        generator*: AtomGenerator
         icon*: string
         link*: AtomLink
         logo*: string
@@ -36,12 +36,15 @@ type
         textType*: string
         text*: string
 
-    AtomAuthor* = object
+    AtomGenerator* = ref object of AtomText
+        uri*: string
+
+    AtomAuthor* = ref object of AtomCommon
         name*: string                    # Required Atom field
         uri*: string
         email*: string
 
-    AtomCategory* = object
+    AtomCategory* = ref object of AtomCommon
         term*: string
         label*: string
         scheme*: string
@@ -49,7 +52,7 @@ type
     AtomContent* = ref object of AtomText
         src*: string
 
-    AtomLink* = object
+    AtomLink* = ref object of AtomCommon
         href*: string
         rel*: string
         linktype*: string
@@ -77,7 +80,7 @@ type
         authors*: seq[AtomAuthor]
         categories*: seq[AtomCategory]
         contributors*: seq[AtomAuthor]
-        generator*: string
+        generator*: AtomGenerator
         icon*: string
         id*: string
         link*: AtomLink
@@ -88,10 +91,12 @@ type
         updated*: string
 
 
-converter toString*(obj: AtomText): string = # Promotes text node to the top if caller expects string
+# Promotes text node to the top of an AtomText object if caller expects a string
+converter toString*(obj: AtomText): string =
     return obj.text
 
-proc parseAuthors ( node: XmlNode, mode="author" ) : seq[AtomAuthor] =
+
+func parseAuthors ( node: XmlNode, mode="author" ) : seq[AtomAuthor] =
     var authors:seq[AtomAuthor]
     if node.child(mode) != nil:
         for athr_node in node.findAll(mode):
@@ -103,7 +108,7 @@ proc parseAuthors ( node: XmlNode, mode="author" ) : seq[AtomAuthor] =
     if authors.len == 0: return @[]
     return authors
 
-proc parseCategories ( node: XmlNode ) : seq[AtomCategory] =
+func parseCategories ( node: XmlNode ) : seq[AtomCategory] =
     var categories:seq[AtomCategory]
     if node.child("category") != nil:
         for cat_node in node.findAll("category"):
@@ -117,7 +122,14 @@ proc parseCategories ( node: XmlNode ) : seq[AtomCategory] =
     if categories.len == 0: return @[]
     return categories
 
-proc parseLink ( node: XmlNode ): AtomLink =
+func parseGenerator ( node: XmlNode ): AtomGenerator =
+    var generator = AtomGenerator()
+    let generator_node = node.child("generator")
+    generator.text = generator_node.innerText
+    if node.attrs != nil: generator.uri = generator_node.attr("uri")
+    return generator
+
+func parseLink ( node: XmlNode ): AtomLink =
     var link: AtomLink = AtomLink()
     if node.attrs != nil:
         if node.attr("href") != "": link.href = node.attr("href")
@@ -128,7 +140,7 @@ proc parseLink ( node: XmlNode ): AtomLink =
         if node.attr("length") != "": link.length = node.attr("length")
     return link
 
-proc parseEntry( node: XmlNode ) : AtomEntry =
+func parseEntry( node: XmlNode ) : AtomEntry =
     var entry: AtomEntry = AtomEntry()
 
     # Fill the required fields
@@ -174,7 +186,7 @@ proc parseEntry( node: XmlNode ) : AtomEntry =
         if source.child("author") != nil: entry.source.authors = source.parseAuthors()
         if source.child("category") != nil: entry.source.categories = source.parseCategories()
         if source.child("contributor") != nil: entry.source.contributors = source.parseAuthors(mode="contributor")
-        if source.child("generator") != nil: entry.source.generator = source.child("generator").innerText
+        if source.child("generator") != nil: entry.source.generator = source.parseGenerator()
         if source.child("icon") != nil: entry.source.icon = source.child("icon").innerText
         if source.child("id") != nil: entry.source.id = source.child("id").innerText
         if source.child("link") != nil: entry.source.link = source.child("link").parseLink()
@@ -219,7 +231,7 @@ proc parseAtom* ( data: string ): Atom =
 
     if node.child("contributor") != nil: atom.contributors = node.parseAuthors(mode="contributor")
 
-    if node.child("generator") != nil: atom.generator = node.child("generator").innerText
+    if node.child("generator") != nil: atom.generator = node.parseGenerator()
 
     if node.child("icon") != nil: atom.icon = node.child("icon").innerText
 
