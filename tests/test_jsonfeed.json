@@ -1,0 +1,46 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "Bloggs's Planes Trains and Automobiles",
+    "home_page_url": "http://joe.bloggs",
+    "feed_url": "http://joe.bloggs/feed.json",
+    "description": "About Trains, Planes, and Automobiles.",
+    "next_url": "http://joe.bloggs/feed.json/02",
+    "icon": "http://joe.bloggs/mug.jpg",
+    "favicon": "http://joe.bloggs/little_mug.jpg",
+    "author": {
+        "name": "Joe Bloggs",
+        "url": "http://joe.bloggs",
+        "avatar": "http://joe.bloggs/mug.jpg"
+    },
+    "expired": false,
+    "items": [
+        {
+            "title": "Aeroplanes not Airplanes",
+            "id": "urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a",
+            "content_html": "<p><i>Aero</i>- not air-, fools!</p>",
+            "url": "http://joe.bloggs/01-item",
+            "summary": "Americans wrong!",
+            "external_url": "http://american-airplanes.awesome",
+            "attachments": [{
+                "url": "http://learntowordgood.com/aeroplane",
+                "mime_type": "audio/mpeg",
+                "title": "Learn How to say Aeroplane",
+                "size_in_bytes": 6000,
+                "duration_in_seconds": 5
+            }],
+            "date_published": "2010-02-07T14:04:00-04:00"
+        },
+        {
+            "id": "urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6d",
+            "author": {
+                "name": "Jane Bloggs"
+            },
+            "image": "http://joe.bloggs/images/big-train.jpg",
+            "banner_image": "http://joe.bloggs/images/big-train-banner.jpg",
+            "content_text": "Trains!",
+            "url": "http://joe.bloggs/02-item",
+            "date_published": "2010-02-07T14:04:00-05:00",
+            "tags": ["trains", "photos"]
+        }
+    ]
+}

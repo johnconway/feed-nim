@@ -46,24 +46,24 @@ type
         banner_image*: string
         date_published*: string
         date_modified*: string
-        tags: seq[string]
+        tags*: seq[string]
         attachments*: seq[JSONFeedAttachment]
 
     JSONFeedAttachment* = object
         url*: string
         mime_type*: string
         title*: string
-        size_in_bytes*: string
-        duration_in_seconds*: string
+        size_in_bytes*: int
+        duration_in_seconds*: int
 
 proc parseItem( node: JsonNode) : JSONFeedItem =
     var item: JSONFeedItem = JSONFeedItem()
 
     if node.getOrDefault( "author" ) != nil:
         let author = node["author"]
-        item.author.name = getStr( node.getOrDefault "name" )
-        item.author.url = getStr( node.getOrDefault "url" )
-        item.author.avatar = getStr( node.getOrDefault "avatar" )
+        item.author.name = getStr( author.getOrDefault "name" )
+        item.author.url = getStr( author.getOrDefault "url" )
+        item.author.avatar = getStr( author.getOrDefault "avatar" )
 
     item.id = getStr( node.getOrDefault "id" )
     item.url = getStr( node.getOrDefault "url" )
@@ -79,7 +79,7 @@ proc parseItem( node: JsonNode) : JSONFeedItem =
 
     if node.getOrDefault( "tags" ) != nil:
         for tag in node["tags"]:
-            item.tags.add( $tag )
+            item.tags.add( tag.to(string) )
 
     if node.getOrDefault( "attachments" ) != nil:
         for jattach in node["attachments"]:
@@ -87,8 +87,8 @@ proc parseItem( node: JsonNode) : JSONFeedItem =
             attachment.url = getStr( jattach.getOrDefault "url" )
             attachment.mime_type = getStr( jattach.getOrDefault "mime_type" )
             attachment.title = getStr( jattach.getOrDefault "title" )
-            attachment.size_in_bytes = getStr( jattach.getOrDefault "size_in_bytes" )
-            attachment.duration_in_seconds = getStr( jattach.getOrDefault "duration_in_seconds" )
+            attachment.size_in_bytes = getInt( jattach.getOrDefault "size_in_bytes" )
+            attachment.duration_in_seconds = getInt( jattach.getOrDefault "duration_in_seconds" )
 
             item.attachments.add( attachment )
 
