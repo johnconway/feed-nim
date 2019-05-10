@@ -21,22 +21,19 @@ It has not been tested in the wild, and is mostly written by an inexperienced do
 
 ### Accessors
 
-Feed-Nim will give a data tree which looks very similar to the data tree of the feed, and the nodes will mostly have the same names. For example an RSS feed 'title' node will be
+Feed-Nim will give a data tree which looks very similar to the data tree of the feed, and the nodes will mostly have the same names. For example an RSS feed 'title' node will be:
 
-<code>
-let feed = loadRSS("my_feed.xml")
-feed.title # Will hold the title
-</code>
+`let feed = loadRSS("my_feed.xml")`<br>
+`feed.title # Will hold the title`<br>
+<sub>(Bet you didn't see that coming!)</sub>
 
-(Bet you didn't see that coming!)
+There are some exeptions, elements that can be repeated according to the specifications are pluralised as follows:
 
-There are some exeptions, elements that can be repeated accorting to the specifications are pluralised as follows:
-
-*RSS*: `<item>` -> accessed as '`.items[index]`'<br>
-*RSS and Atom*: `<category>` -> '`.categories[index]`'<br>
-*Atom*: `<entry>` -> accessed as '`.entries[index]`'<br>
-*Atom*: `<author>` -> accessed as '`.authors[index]`' (if you call just .author, you will return the first author of the sequence)<br>
-*Atom*: `<contributor>` -> accessed as '`.contributors[index]`' (again, calling this singular will return the first in the sequence)
+*RSS*: `<item>` is accessed as `.items[index]`<br>
+*RSS and Atom*: `<category>` is accessed as `.categories[index]`<br>
+*Atom*: `<entry>` is accessed as `.entries[index]`<br>
+*Atom*: `<author>` is accessed as `.authors[index]` (if you call just .author, you will return the first author of the sequence)<br>
+*Atom*: `<contributor>` is accessed as `.contributors[index]` (again, calling this singular will return the first in the sequence)
 
 Some Atom nodes have the Nim keyword 'type' as an attribute. These have been changed as follows.
 
