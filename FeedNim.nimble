@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.2"
+version       = "0.2.0"
 author        = "John Conway"
 description   = "An Atom, RSS, and JSONfeed parser"
 license       = "MIT"
