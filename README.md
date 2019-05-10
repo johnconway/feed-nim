@@ -32,13 +32,13 @@ There are some exeptions, elements that can be repeated according to the specifi
 *RSS*: `<item>` is accessed as `.items[index]`<br>
 *RSS and Atom*: `<category>` is accessed as `.categories[index]`<br>
 *Atom*: `<entry>` is accessed as `.entries[index]`<br>
-*Atom*: `<author>` is accessed as `.authors[index]` (if you call just .author, you will return the first author of the sequence)<br>
+*Atom*: `<author>` is accessed as `.authors[index]` (if you call just `.author`, you will return the first author of the sequence)<br>
 *Atom*: `<contributor>` is accessed as `.contributors[index]` (again, calling this singular will return the first in the sequence)
 
-Some Atom nodes have the Nim keyword 'type' as an attribute. These have been changed as follows.
+Some Atom nodes have the Nim keyword 'type' as an attribute. These have been changed as follows:
 
-`<link type="">` type is accesed with linkType<br>
-`<content type="">, <title type="">, and <subtitle type="">` types are accesed with textType
+`<link type="">` type is accesed with `.linkType`<br>
+`<content type="">`, `<title type="">`, and `<subtitle type="">` types are accesed with `.textType`
 
 ### Limitations
 
