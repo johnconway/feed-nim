@@ -12,7 +12,7 @@ import streams
 import sugar
 
 type
-    AtomCommon = ref object of RootObj  # These properties aren't gathered yet
+    AtomCommon = ref object of RootObj  # These properties aren't'gathered
         xmlbase*: string
         xmllang*: string
 
@@ -92,7 +92,7 @@ type
 
 
 # Promotes text node to the top of an AtomText object if caller expects a string
-converter atomToString*(obj: AtomText): string =
+converter toString*(obj: AtomText): string =
     return obj.text
 
 
@@ -140,13 +140,26 @@ func parseLink ( node: XmlNode ): AtomLink =
         if node.attr("length") != "": link.length = node.attr("length")
     return link
 
+func parseText ( node: XmlNode ): string =
+    if node.attr("type") == "xhtml" or node.attr("type") == "html":
+        var content = ""
+        for item in node.items:
+            content = content & $item
+        # Strip CDATA
+        if content[0 .. 8] == "<![CDATA[":
+            content = content.substr[9 .. content.len()-4 ]
+        return content
+    else:
+        return node.innerText
+
 func parseEntry( node: XmlNode ) : AtomEntry =
     var entry: AtomEntry = AtomEntry()
 
     # Fill the required fields
     entry.id = node.child("id").innerText
     entry.title = AtomText()
-    entry.title.text = node.child("title").innerText
+    if node.attrs != nil: entry.title.textType = node.attr("type")
+    entry.title.text = node.child("title").parseText()
     entry.updated = node.child("updated").innerText
 
     # Fill the optinal fields
@@ -160,16 +173,9 @@ func parseEntry( node: XmlNode ) : AtomEntry =
         entry.content.text = content_node.innerText
 
         if content_node.attrs != nil:
-            if content_node.attr("type") == "xhtml" or content_node.attr("type") == "html":
-                var content = ""
-                entry.content.texttype = content_node.attr("type")
-                for item in content_node.items:
-                    content = content & $item
-                entry.content.text = content
-            else:
-                entry.content.text = content_node.innerText
-
             entry.content.src = content_node.attr("src")
+            entry.content.texttype = content_node.attr("type")
+            entry.content.text = content_node.parseText()
 
     if node.child("contributor") != nil:
         entry.contributors = node.parseAuthors(mode="contributor")
@@ -192,8 +198,8 @@ func parseEntry( node: XmlNode ) : AtomEntry =
         if source.child("link") != nil: entry.source.link = source.child("link").parseLink()
         if source.child("logo") != nil: entry.source.logo = source.child("logo").innerText
         if source.child("rights") != nil: entry.source.rights = source.child("rights").innerText
-        if source.child("subtitle") != nil: entry.source.subtitle = source.child("subtitle").innerText
-        if source.child("title") != nil: entry.source.title = source.child("title").innerText
+        if source.child("subtitle") != nil: entry.source.subtitle = source.child("subtitle").parseText()
+        if source.child("title") != nil: entry.source.title = source.child("title").parseText()
         if source.child("updated") != nil: entry.source.updated = source.child("updated").innerText
 
         entry.source.author = entry.source.authors[0]
@@ -221,7 +227,7 @@ proc parseAtom* ( data: string ): Atom =
     atom.id = node.child("id").innerText
 
     atom.title = AtomText()
-    atom.title.text = node.child("title").innerText
+    atom.title.text = node.child("title").parseText()
     atom.updated = node.child("updated").innerText
 
     # Fill in the optional fields

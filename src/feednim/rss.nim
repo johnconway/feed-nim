@@ -96,14 +96,19 @@ func parseCategories( node: XmlNode ): seq[RSSCategory] =
     if categories.len == 0: return @[]
     return categories
 
+func parseText ( node: XmlNode ): string =
+    var content = node.innerText
+    if content[0 .. 8] == "<![CDATA[":
+        return content.substr[9 .. content.len()-4 ]
+    return content
 
 func parseItem( node: XmlNode) : RSSItem =
     var item: RSSItem = RSSItem()
-    if node.child("title") != nil: item.title = node.child("title").innerText
+    if node.child("title") != nil: item.title = node.child("title").parseText()
 
     if node.child("link") != nil: item.link = node.child("link").innerText
 
-    if node.child("description") != nil: item.description = node.child("description").innerText
+    if node.child("description") != nil: item.description = node.child("description").parseText()
 
     for key in @["author", "dc:creator"]:
         if node.child(key) != nil: item.author = node.child(key).innerText
@@ -141,9 +146,9 @@ proc parseRSS*(data: string): RSS =
     var rss: RSS = RSS()
 
     # Fill the required fields.
-    rss.title = channel.child("title").innerText
+    rss.title = channel.child("title").parseText()
     rss.link = channel.child("link").innerText
-    rss.description = channel.child("description").innerText
+    rss.description = channel.child("description").parseText()
 
     # Fill the optional fields.
     for key in @["language", "dc:language"]:
@@ -189,7 +194,7 @@ proc parseRSS*(data: string): RSS =
         if img.child("link") != nil:  image.link = img.child("link").innerText
         if img.child("width") != nil: image.width = img.child("width").innerText
         if img.child("height") != nil: image.height = img.child("height").innerText
-        if img.child("description") != nil: image.description = img.child("description").innerText
+        if img.child("description") != nil: image.description = img.child("description").parseText()
         rss.image = image
 
     if channel.child("rating") != nil: rss.rating = channel.child("rating").innerText

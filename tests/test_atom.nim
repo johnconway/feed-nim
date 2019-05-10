@@ -101,3 +101,13 @@ test "Read Valid Atom Feed":
     check feed.entries[1].published == "2003-12-13T18:20:02Z"
     check feed.entries[1].rights == "Copyright Jane Bloggs"
     check feed.entries[1].summary == "Trains!"
+
+test "Fetch Atom Feed from W3C":
+    let feed = getAtom("https://www.w3.org/blog/news/feed/atom")
+    check feed.title != ""
+    check feed.id != ""
+    check feed.link.href != ""
+    check feed.entries.len() > 0
+    check feed.entries[0].title != ""
+    check feed.entries[0].updated != ""
+    check feed.entries[0].id != ""
