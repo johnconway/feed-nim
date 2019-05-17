@@ -10,7 +10,7 @@ import streams
 import sugar
 
 type
-    JSONFeed* = object
+    JSONFeed* = ref object of RootObj
         author*: JSONFeedAuthor
         version*: string
         title*: string

@@ -45,7 +45,7 @@ test "Read Valid Atom Feed":
     check feed.link.linktype == "application/xml+atom"
     check feed.link.hreflang == "en-GB"
     check feed.link.title == "Bloggs's Planes Trains and Automobiles"
-    check feed.link.length == "1000000"
+    check feed.link.length == 1000000
 
     check feed.logo == "http://joe.bloggs/logo.jpeg"
     check feed.rights == "Copyright Joe and Jane Bloggs"
@@ -97,7 +97,7 @@ test "Read Valid Atom Feed":
     check feed.entries[1].link.linktype == "text/html"
     check feed.entries[1].link.hreflang == "en-GB"
     check feed.entries[1].link.title == "Trains!"
-    check feed.entries[1].link.length == "1000000"
+    check feed.entries[1].link.length == 1000000
     check feed.entries[1].published == "2003-12-13T18:20:02Z"
     check feed.entries[1].rights == "Copyright Jane Bloggs"
     check feed.entries[1].summary == "Trains!"

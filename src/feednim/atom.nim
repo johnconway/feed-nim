@@ -58,7 +58,7 @@ type
         linktype*: string
         hreflang*: string
         title*: string
-        length*: string
+        length*: int
 
     AtomEntry* = ref object of AtomCommon
         id*: string                     # Required Atom field
@@ -137,7 +137,7 @@ func parseLink ( node: XmlNode ): AtomLink =
         if node.attr("type") != "": link.linktype = node.attr("type")
         if node.attr("hreflang") != "": link.hreflang = node.attr("hreflang")
         if node.attr("title") != "": link.title = node.attr("title")
-        if node.attr("length") != "": link.length = node.attr("length")
+        if node.attr("length") != "": link.length = node.attr("length").parseInt()
     return link
 
 func parseText ( node: XmlNode ): string =
