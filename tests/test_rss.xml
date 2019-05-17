@@ -46,7 +46,7 @@
 			<title>Aeroplanes not Airplanes</title>
 			<link>http://joe.bloggs/posts/1</link>
 			<pubDate>Sat, 07 Sep 2002 00:00:01 GMT</pubDate>
-			<description>Aero- not air-, fools!</description>
+			<description><![CDATA[Aero- not air-, fools!]]></description>
 			<author>jane@joe.bloggs (Jane Bloggs)</author>
 			<category domain="http://awesomecategories.org" >Words</category>
 			<comments>http://joe.bloggs/posts/1/comments</comments>

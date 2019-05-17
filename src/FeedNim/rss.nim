@@ -97,11 +97,15 @@ func parseCategories( node: XmlNode ): seq[RSSCategory] =
     return categories
 
 func parseText ( node: XmlNode ): string =
-    var content = node.innerText
-    if content.len() > 14:
-        if content[0 .. 8] == "<![CDATA[":
-            return content.substr[9 .. content.len()-4 ]
-    return content
+    var content = ""
+    for item in node.items:
+        content = content & $item
+    # Strip CDATA
+    if content[0 .. 8] == "<![CDATA[":
+        content = content.substr[9 .. content.len()-4 ]
+        return content
+    else:
+        return node.innerText
 
 func parseItem( node: XmlNode) : RSSItem =
     var item: RSSItem = RSSItem()
