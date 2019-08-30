@@ -9,8 +9,8 @@ import unittest
 
 import marshal
 
-import feednim
-import ../src/feednim/Rss
+import FeedNim
+import ../src/FeedNim/rss
 
 test "Read Valid Rss Feed":
     let feed = "./tests/test_rss.xml".loadRss()
