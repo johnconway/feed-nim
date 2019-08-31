@@ -101,7 +101,7 @@ func parseText ( node: XmlNode ): string =
     for item in node.items:
         content = content & $item
     # Strip CDATA
-    if content[0 .. 8] == "<![CDATA[":
+    if content.len >= 9 and content[0 .. 8] == "<![CDATA[":
         content = content.substr[9 .. content.len()-4 ]
         return content
     else:
