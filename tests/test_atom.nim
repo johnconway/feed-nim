@@ -9,8 +9,8 @@ import unittest
 
 import marshal
 
-import feednim
-import ../src/feednim/atom
+import FeedNim
+import ../src/FeedNim/atom
 
 test "Read Valid Atom Feed":
     let feed = "./tests/test_atom.xml".loadAtom()
