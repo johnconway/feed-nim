@@ -9,8 +9,8 @@ import unittest
 
 import marshal
 
-import feednim
-import ../src/feednim/jsonfeed
+import FeedNim
+import ../src/FeedNim/jsonfeed
 
 test "Read Valid JsonFeed":
     let feed = "./tests/test_jsonfeed.json".loadJsonFeed()

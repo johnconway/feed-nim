@@ -1,8 +1,8 @@
 import httpclient
 
-import feednim/atom
-import feednim/rss
-import feednim/jsonfeed
+import FeedNim/atom
+import FeedNim/rss
+import FeedNim/jsonfeed
 
 proc loadAtom*(filename: string): Atom = ## Loads the Atom from the given ``filename``.
     var Atom: string = readFile(filename) # Load the data from the file.
