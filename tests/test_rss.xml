@@ -54,6 +54,17 @@
 			<guid>http://joe.bloggs/posts/1</guid>
 			<source url="http://dictionary.com">The Dictionary</source>
 		</item>
+		<item>
+			<title>Short</title>
+			<link>http://joe.bloggs/posts/2</link>
+			<pubDate>Sat, 07 Sep 2002 00:00:01 GMT</pubDate>
+			<description><![CDATA[Short]]></description>
+			<author>jane@joe.bloggs (Jane Bloggs)</author>
+			<category domain="http://awesomecategories.org" >Words</category>
+			<comments>http://joe.bloggs/posts/2/comments</comments>
+			<guid>http://joe.bloggs/posts/2</guid>
+			<source url="http://dictionary.com">The Dictionary</source>
+		</item>
 
 	</channel>
 </rss>
