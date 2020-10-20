@@ -45,11 +45,11 @@
             <email>mail@joe.bloggs</email>
         </author>
         <category term="words" label="Words" scheme="http://awesomecategories.org" />
-        <content type="xhtml">
+        <content type="xhtml"><![CDATA[
             <div xmlns="http://www.w3.org/1999/xhtml">
                 <p><i>Aero</i>- not air-, fools!</p>
             </div>
-        </content>
+        ]]></content>
         <published>2003-12-13T18:30:02Z</published>
         <rights>Copyright Joe Bloggs</rights>
         <source>

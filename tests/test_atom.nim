@@ -8,6 +8,7 @@
 import unittest
 
 import marshal
+import strformat
 
 import FeedNim
 import ../src/FeedNim/atom
@@ -66,8 +67,11 @@ test "Read Valid Atom Feed":
     var feed_0_content_textType = feed.entries[0].content.textType
     check feed_0_content_textType == "xhtml"
     var feed_0_content_text: string = feed.entries[0].content
-    check feed_0_content_text == """<div xmlns="http://www.w3.org/1999/xhtml"><p><i>Aero</i>- not air-, fools!</p></div>"""
-
+    check &"!{feed_0_content_text}!" == """!
+            <div xmlns="http://www.w3.org/1999/xhtml">
+                <p><i>Aero</i>- not air-, fools!</p>
+            </div>
+        !"""
     check feed.entries[0].published == "2003-12-13T18:30:02Z"
     check feed.entries[0].rights == "Copyright Joe Bloggs"
 
