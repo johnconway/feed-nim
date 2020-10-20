@@ -52,3 +52,8 @@ Session.vim
 tags
 # Persistent undo
 [._]*.un~
+
+# Test binaries
+tests/test_atom
+tests/test_jsonfeed
+tests/test_rss

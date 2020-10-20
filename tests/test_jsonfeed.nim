@@ -54,7 +54,7 @@ test "Read Valid JsonFeed":
 test "Fetch JsonFeed from JsonFeed.org":
     let feed = getJsonFeed("https://jsonfeed.org/feed.json")
     check feed.title != ""
-    check feed.home_page_url == "https://jsonfeed.org/"
-    check feed.items[0].title == "Announcing JSON Feed"
+    check feed.home_page_url == "https://www.jsonfeed.org/"
+    check feed.items[0].title == "JSON Feed version 1.1"
     check feed.items[0].date_published != ""
     check feed.items[0].id != ""

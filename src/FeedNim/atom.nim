@@ -141,16 +141,16 @@ func parseLink ( node: XmlNode ): AtomLink =
     return link
 
 func parseText ( node: XmlNode ): string =
-    if node.attr("type") == "xhtml" or node.attr("type") == "html":
+    if node.len == 0:
+        return $node
+    else:
         var content = ""
         for item in node.items:
-            content = content & $item
-        # Strip CDATA
-        if content[0 .. 8] == "<![CDATA[":
-            content = content.substr[9 .. content.len()-4 ]
+            case item.kind
+            of xnText: content.add(item.innerText)
+            of xnCData: content.add(item.text)
+            else: discard
         return content
-    else:
-        return node.innerText
 
 func parseEntry( node: XmlNode ) : AtomEntry =
     var entry: AtomEntry = AtomEntry()
@@ -204,7 +204,7 @@ func parseEntry( node: XmlNode ) : AtomEntry =
 
         entry.source.author = entry.source.authors[0]
 
-    if node.child("summary") != nil: entry.summary = node.child("summary").innerText
+    if node.child("summary") != nil: entry.summary = node.child("summary").parseText()
 
     # SUGAR an easy way to access an author
     if entry.authors.len() > 0:
